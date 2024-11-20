@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    background-image: url('assets/images/christmas_background8.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #ff6f61;
+    color: white;
+    font-weight: bold;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  td {
+    font-family: 'Arial', sans-serif;
+  }
+
+  tbody {
+    background-color: #ebd8d7;
+  }
+
+  .merry-image {
+    width: 250px; /* Adjust the size as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0px; /* Add some space around the image */
+    display: block; /* Adjust for better positioning */
+    z-index: 10;
+  }
+
+  .top-right-image {
+    position: absolute; /* Position relative to the viewport */
+    top: 40px; /* Distance from the top of the page */
+    right: 10px; /* Distance from the right side */
+    width: 300px; /* Adjust image size as needed */
+    height: auto; /* Maintain aspect ratio */
+    z-index: 10; /* Ensure the image stays above other elements */
+  }
+  

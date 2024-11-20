@@ -1,0 +1,48 @@
+<div>
+  <img src="assets/images/christmas_logo4.jpg" alt="Merry Christmas" class= "merry-image">
+  <img src="assets/images/santa1.png" alt="Christmas Tree" class="top-right-image" />
+</div>
+<div style="margin-left: 30px;">
+  <!-- <h4 class="card-title" *ngFor="let user of users">{{user.name}}</h4>
+  <h6 class="card-subtitle mb-2 text-muted" *ngFor="let user of users">{{user.email}}</h6> -->
+  <button class="btn btn-primary" type="submit" style='margin-right:16px' (click)="showDiv('wishes')">Show Wishes</button>
+  <button class="btn btn-primary" type="submit" (click)="showDiv('addWishes')">Add Wishes</button>
+  <br/><br>
+  <div *ngIf="selectedDiv === 'wishes'">
+    <h2><b>Christmas Wishlist</b></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User Name</th>
+          <th>Email Address</th>
+          <th>Wish</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let wish of wishes">
+          <td>{{ wish.name }}</td>
+          <td>{{ wish.email }}</td>
+          <td>{{ wish.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="selectedDiv === 'addWishes'">
+    <h2><b>Add Your Wish</b></h2>
+    <form (ngSubmit) = "add_wishes()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" [(ngModel)]="newWish.name" class="form-control" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" [(ngModel)]="newWish.email" class="form-control" aria-describedby="emailHelp" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="description">Wish</label>
+        <textarea id="description" name="description" [(ngModel)]="newWish.description" class="form-control" rows="3"></textarea>
+      </div><br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
