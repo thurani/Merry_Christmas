@@ -1,12 +1,17 @@
 <div>
   <img src="assets/images/christmas_logo4.jpg" alt="Merry Christmas" class= "merry-image">
-  <img src="assets/images/santa1.png" alt="Christmas Tree" class="top-right-image" />
+  <img src="assets/images/santa1.png" alt="Santa" class="top-right-image" />
 </div>
 <div style="margin-left: 30px;">
+  <img *ngIf="isTreeOn" src="assets/images/tree-on.png" alt="Christmas Tree On" class="center-image" />
+  <img *ngIf="!isTreeOn" src="assets/images/tree-off.png" alt="Christmas Tree Off" class="center-image" />
   <!-- <h4 class="card-title" *ngFor="let user of users">{{user.name}}</h4>
   <h6 class="card-subtitle mb-2 text-muted" *ngFor="let user of users">{{user.email}}</h6> -->
   <button class="btn btn-primary" type="submit" style='margin-right:16px' (click)="showDiv('wishes')">Show Wishes</button>
-  <button class="btn btn-primary" type="submit" (click)="showDiv('addWishes')">Add Wishes</button>
+  <button class="btn btn-primary" type="submit" style='margin-right:16px' (click)="showDiv('addWishes')">Add Wishes</button>
+  <button class="toggle-btn" (click)="toggleTree()">
+    {{ isTreeOn ? 'Lights Off' : 'Lights On' }}
+  </button>
   <br/><br>
   <div *ngIf="selectedDiv === 'wishes'">
     <h2><b>Christmas Wishlist</b></h2>

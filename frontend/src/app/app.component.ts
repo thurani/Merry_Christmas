@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export class AppComponent {
   title = 'Merry Christmas';
+  isTreeOn = false;
 
   newWish = { name: '', email: '', description: '' };
   wishes:any = []
@@ -31,6 +32,10 @@ export class AppComponent {
 
   showDiv(divId: string) {
     this.selectedDiv = divId;
+  }
+
+  toggleTree() {
+    this.isTreeOn = !this.isTreeOn;
   }
 
   get_wishes(){

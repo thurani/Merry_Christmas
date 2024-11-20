@@ -55,4 +55,34 @@ table {
     height: auto; /* Maintain aspect ratio */
     z-index: 10; /* Ensure the image stays above other elements */
   }
+  .center-image {
+    position: absolute; /* Position relative to the viewport */
+    top: 40px; /* Distance from the top of the page */
+    right: 300px; /* Distance from the right side */
+    width: 300px; /* Adjust image size as needed */
+    height: 300px; /* Maintain aspect ratio */
+    z-index: 10; /* Ensure the image stays above other elements */
+  }
+
+  form {
+    width: 60%;
+  }
+  label {
+    font-weight: bold;
+  }
+
+  .toggle-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    background-color: #f8c300; /* Golden color */
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .toggle-btn:hover {
+    background-color: #d89f00;
+  }
   
