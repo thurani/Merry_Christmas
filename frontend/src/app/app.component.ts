@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,7 @@ export class AppComponent {
     });
   }
 
-  ngOnInit(){
+  async ngOnInit(){
     this.fetchWishes();
   }
 
@@ -42,41 +43,41 @@ export class AppComponent {
     this.isTreeOn = !this.isTreeOn;
   }
 
-  fetchWishes(){
-    this.http.get(this.API_URL + 'get/').subscribe({
-      next: (response: any) => (this.wishes = response),
-      error: (err) => console.error('Error fetching wishes:', err),
-    });
-  }
-
-  addWish() {
-    if (this.wishForm.valid) {
-      // Add Wish
-      this.http.post(this.API_URL + 'add/', this.wishForm.value).subscribe({
-        next: () => {
-          alert('Wish added successfully!');
-          this.resetForm();
-          this.fetchWishes();
-        },
-        error: (err) => console.error('Error adding wish:', err),
-      });
+  async fetchWishes(){
+    try {
+      this.wishes = await firstValueFrom(this.http.get<any[]>(`${this.API_URL}get/`));
+    } catch (error) {
+      console.error('Error fetching wishes:', error);
     }
   }
 
-  deleteWish(id: number) {
+  async addWish() {
+    if (this.wishForm.valid) {
+      try {
+        await firstValueFrom(this.http.post(`${this.API_URL}add/`, this.wishForm.value));
+        alert('Wish added successfully!');
+        this.resetForm();
+        await this.fetchWishes();
+      } catch (error) {
+        console.error('Error adding wish:', error);
+      }
+    }
+  }
+
+  async deleteWish(id: number) {
     if (!id) {
       alert('Invalid Wish ID');
       return;
     }
 
     if (confirm('Are you sure you want to delete this wish?')) {
-      this.http.delete(this.API_URL + `delete/`, { params: { wish_id: id } }).subscribe({
-        next: () => {
-          alert('Wish deleted successfully!');
-          this.fetchWishes();
-        },
-        error: (err) => console.error('Error deleting wish:', err),
-      });
+      try {
+        await firstValueFrom(this.http.delete(`${this.API_URL}delete/`, { params: { wish_id: id } }));
+        alert('Wish deleted successfully!');
+        await this.fetchWishes();
+      } catch (error) {
+        console.error('Error deleting wish:', error);
+      }
     }
   }
 
