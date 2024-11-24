@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -16,18 +15,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class AppComponent {
   title = 'Merry Christmas';
   isTreeOn = false;
-
-  newWish = { name: '', email: '', description: '' };
-  wishes:any = []
-
-  APIURL = "http://localhost:8000/";
-
-  constructor(private http:HttpClient){}
-
+  wishes:any[] = [];
+  wishForm: FormGroup;
   selectedDiv: string = '';
 
+  API_URL = "http://localhost:8000/";
+
+  constructor(private fb: FormBuilder, private http: HttpClient){
+    this.wishForm = this.fb.group({
+      id: [],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      description: ['', [Validators.required, Validators.minLength(5)]],
+    });
+  }
+
   ngOnInit(){
-    this.get_wishes();
+    this.fetchWishes();
   }
 
   showDiv(divId: string) {
@@ -38,25 +42,57 @@ export class AppComponent {
     this.isTreeOn = !this.isTreeOn;
   }
 
-  get_wishes(){
-    this.http.get(this.APIURL + "get_wishes/").subscribe((res)=>{
-      this.wishes = res;
-    })
+  fetchWishes(){
+    this.http.get(this.API_URL + 'get/').subscribe({
+      next: (response: any) => (this.wishes = response),
+      error: (err) => console.error('Error fetching wishes:', err),
+    });
   }
 
-  add_wishes(){
-    // const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    if (this.newWish.name && this.newWish.email && this.newWish.description){
-      this.http.post(this.APIURL + "add_wishes/", this.newWish).subscribe({
-        next: (response) => {
-          console.log('Wish added:', response);
-          this.get_wishes();
-          this.newWish = { name: '', email: '', description: '' };
+  addWish() {
+    if (this.wishForm.valid) {
+      // Add Wish
+      this.http.post(this.API_URL + 'add/', this.wishForm.value).subscribe({
+        next: () => {
+          alert('Wish added successfully!');
+          this.resetForm();
+          this.fetchWishes();
         },
-        error: (error) => {
-          console.error('Error adding wish:', error);
-        }
-    })
+        error: (err) => console.error('Error adding wish:', err),
+      });
     }
+  }
+
+  deleteWish(id: number) {
+    if (!id) {
+      alert('Invalid Wish ID');
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this wish?')) {
+      this.http.delete(this.API_URL + `delete/`, { params: { wish_id: id } }).subscribe({
+        next: () => {
+          alert('Wish deleted successfully!');
+          this.fetchWishes();
+        },
+        error: (err) => console.error('Error deleting wish:', err),
+      });
+    }
+  }
+
+  resetForm() {
+    this.wishForm.reset();
+  }
+
+  get name() {
+    return this.wishForm.get('name');
+  }
+
+  get email() {
+    return this.wishForm.get('email');
+  }
+
+  get description() {
+    return this.wishForm.get('description');
   }
 }

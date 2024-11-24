@@ -5,8 +5,6 @@
 <div style="margin-left: 30px;">
   <img *ngIf="isTreeOn" src="assets/images/tree-on.png" alt="Christmas Tree On" class="center-image" />
   <img *ngIf="!isTreeOn" src="assets/images/tree-off.png" alt="Christmas Tree Off" class="center-image" />
-  <!-- <h4 class="card-title" *ngFor="let user of users">{{user.name}}</h4>
-  <h6 class="card-subtitle mb-2 text-muted" *ngFor="let user of users">{{user.email}}</h6> -->
   <button class="btn btn-primary" type="submit" style='margin-right:16px' (click)="showDiv('wishes')">Show Wishes</button>
   <button class="btn btn-primary" type="submit" style='margin-right:16px' (click)="showDiv('addWishes')">Add Wishes</button>
   <button class="toggle-btn" (click)="toggleTree()">
@@ -21,6 +19,7 @@
           <th>User Name</th>
           <th>Email Address</th>
           <th>Wish</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -28,26 +27,41 @@
           <td>{{ wish.name }}</td>
           <td>{{ wish.email }}</td>
           <td>{{ wish.description }}</td>
+          <td>
+            <button class="btn btn-danger" (click)="deleteWish(wish.id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
   <div *ngIf="selectedDiv === 'addWishes'">
     <h2><b>Add Your Wish</b></h2>
-    <form (ngSubmit) = "add_wishes()">
+    <form [formGroup]="wishForm" (ngSubmit)="addWish()">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" [(ngModel)]="newWish.name" class="form-control" placeholder="Enter your name">
+        <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': name?.invalid && name?.touched }" placeholder="Enter your name">
+        <div *ngIf="name?.invalid && name?.touched" class="text-danger">
+          <small *ngIf="name?.errors?.['required']">Name is required.</small>
+          <small *ngIf="name?.errors?.['minlength']">Name must be at least 3 characters.</small>
+        </div>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" [(ngModel)]="newWish.email" class="form-control" aria-describedby="emailHelp" placeholder="Enter your email">
+        <input type="email" id="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': email?.invalid && email?.touched }" placeholder="Enter your email">
+        <div *ngIf="email?.invalid && email?.touched" class="text-danger">
+          <small *ngIf="email?.errors?.['required']">Email is required.</small>
+          <small *ngIf="email?.errors?.['email']">Email is invalid.</small>
+        </div>
       </div>
       <div class="form-group">
         <label for="description">Wish</label>
-        <textarea id="description" name="description" [(ngModel)]="newWish.description" class="form-control" rows="3"></textarea>
+        <textarea id="description" formControlName="description" [ngClass]="{ 'is-invalid': description?.invalid && description?.touched }" class="form-control" rows="3"></textarea>
+        <div *ngIf="description?.invalid && description?.touched" class="text-danger">
+          <small *ngIf="description?.errors?.['required']">Description is required.</small>
+          <small *ngIf="description?.errors?.['minlength']">Description must be at least 5 characters.</small>
+        </div>
       </div><br>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-success" [disabled]="wishForm.invalid">Submit</button>
     </form>
   </div>
 </div>
