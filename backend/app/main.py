@@ -13,7 +13,3 @@ app.add_middleware(
 )
 
 app.include_router(wish_router)
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Christmas Wishes API!"}

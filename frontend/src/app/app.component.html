@@ -28,6 +28,7 @@
           <td>{{ wish.email }}</td>
           <td>{{ wish.description }}</td>
           <td>
+            <button class="btn btn-primary" style='margin-right:16px' (click)="openEditForm(wish)">Update</button>
             <button class="btn btn-danger" (click)="deleteWish(wish.id)">Delete</button>
           </td>
         </tr>
@@ -62,6 +63,25 @@
         </div>
       </div><br>
       <button type="submit" class="btn btn-success" [disabled]="wishForm.invalid">Submit</button>
+    </form>
+  </div>
+  <div *ngIf="selectedDiv === 'updateWish'">
+    <h2><b>Update Your Wish</b></h2>
+    <form [formGroup]="wishUpdateForm" (ngSubmit)="submitUpdatedWish()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" class="form-control" [disabled]="true" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control" [disabled]="true" />
+      </div>
+      <div class="form-group">
+        <label for="description">Wish</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+      </div><br>
+      <button type="submit" class="btn btn-success" style='margin-right:16px' [disabled]="wishUpdateForm.invalid">Update Wish</button>
+      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
     </form>
   </div>
 </div>

@@ -18,15 +18,23 @@ export class AppComponent {
   isTreeOn = false;
   wishes:any[] = [];
   wishForm: FormGroup;
+  wishUpdateForm: FormGroup;
   selectedDiv: string = '';
 
   API_URL = "http://localhost:8000/";
 
   constructor(private fb: FormBuilder, private http: HttpClient){
     this.wishForm = this.fb.group({
-      id: [],
+      id: [0],
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
+      description: ['', [Validators.required, Validators.minLength(5)]],
+    });
+
+    this.wishUpdateForm = this.fb.group({
+      id: [0],
+      name: [{ value: '', disabled: true }, [Validators.required]],
+      email: [{ value: '', disabled: true }, [Validators.required]],
       description: ['', [Validators.required, Validators.minLength(5)]],
     });
   }
@@ -41,6 +49,16 @@ export class AppComponent {
 
   toggleTree() {
     this.isTreeOn = !this.isTreeOn;
+  }
+
+  openEditForm(wish: any) {
+    this.wishUpdateForm.setValue({
+      id: wish.id,
+      name: wish.name,
+      email: wish.email,
+      description: wish.description,
+    });
+    this.selectedDiv = 'updateWish';
   }
 
   async fetchWishes(){
@@ -64,6 +82,20 @@ export class AppComponent {
     }
   }
 
+  async submitUpdatedWish() {
+    if (this.wishUpdateForm.valid) {
+      const updatedWish = this.wishUpdateForm.getRawValue();
+      try {
+        await firstValueFrom(this.http.put(`${this.API_URL}update/`, updatedWish));
+        alert('Wish updated successfully!');
+        this.selectedDiv = 'wishes';
+        await this.fetchWishes();
+      } catch (error) {
+        console.error('Error updating wish:', error);
+      }
+    }
+  }
+
   async deleteWish(id: number) {
     if (!id) {
       alert('Invalid Wish ID');
@@ -72,7 +104,7 @@ export class AppComponent {
 
     if (confirm('Are you sure you want to delete this wish?')) {
       try {
-        await firstValueFrom(this.http.delete(`${this.API_URL}delete/`, { params: { wish_id: id } }));
+        await firstValueFrom(this.http.delete(`${this.API_URL}delete/`, { params: { id: id } }));
         alert('Wish deleted successfully!');
         await this.fetchWishes();
       } catch (error) {
@@ -83,6 +115,10 @@ export class AppComponent {
 
   resetForm() {
     this.wishForm.reset();
+  }
+
+  cancelEdit() {
+    this.selectedDiv = 'wishes';
   }
 
   get name() {

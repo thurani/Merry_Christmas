@@ -85,4 +85,8 @@ table {
   .toggle-btn:hover {
     background-color: #d89f00;
   }
+
+  small {
+    font-weight: bold;
+  }
   
